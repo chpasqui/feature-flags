@@ -1,5 +1,7 @@
 package ch.chpasqui.featureflags;
 
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -60,4 +62,9 @@ public class FeatureFlag {
 		this.rolloutPercentage = rolloutPercentage;
 	}
 
+	public boolean isEnabledFor(String userId){
+		if (!enabled)
+			return false;
+		return Math.floorMod(Objects.hash(userId, key), 100) < rolloutPercentage;
+	}
 }
